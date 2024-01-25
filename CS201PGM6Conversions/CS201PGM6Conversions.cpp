@@ -3,50 +3,48 @@
 
 #include <iostream>
 #include <sstream>
- 
-using namespace std;
 
 //FUNCTION DECLARATIONS
-bool isDigits(string inStr);
+bool isDigits(std::string inStr);
 //PRE:  string is input to the function
 //POST:  return true if nothing other than a digit is found{
 
-string decToBin(const string& inVal);
+std::string decToBin(const std::string& inVal);
 //PRE: input string is sent to function
 //POST: if valid, return a string that is the binary equivalent
 
-string decToBase(const string& inVal, int base);
+std::string decToBase(const std::string& inVal, int base);
 //PRE: input string is sent to function
 //POST: if valid, return a string that is the equivalent value in the base given 
 
-int bintoDec(const string& inVal, int base);
+int bintoDec(const std::string& inVal, int base);
 //PRE: input string is sent to function
 //POST: if valid, return the decimal value of the binary string 
 
 
 int main() {
-    string input;
-    cout << "Enter a decimal number: ";
-    cin >> input;
+    std::string input;
+    std::cout << "Enter a decimal number: ";
+    std::cin >> input;
 
-    string binaryResult = decToBin(input);
+    std::string binaryResult = decToBin(input);
 
-    cout << "Output: " << binaryResult << endl;
+    std::cout << "Output: " << binaryResult << std::endl;
 
     return 0;
 }
 
 //FUNCTION DEFINITIONS
-bool isDigits(string inStr) {
-    return (inStr.find_first_not_of("0123456789") == string::npos);
+bool isDigits(std::string inStr) {
+    return (inStr.find_first_not_of("0123456789") == std::string::npos);
 }
 
-string decToBin(const string& inVal) {
-    string outVal = "";
+std::string decToBin(const std::string& inVal) {
+    std::string outVal = "";
     /*
     IF (isDigits(inVal)) {
         set inVal to integer type
-        outVal = “”
+        outVal = â€œâ€
         decVal = inVal string converted to decimal
         WHILE (decVal > 0)
             tempVal = decValue % 2
@@ -58,15 +56,19 @@ string decToBin(const string& inVal) {
         PRINT error
     ENDIF
     */
+    if (isDigits(inVal)) {
+        int decVal = stoi(inVal);
+        
+    }
     return outVal;
 }
 
-string decToBase(const string& inVal, int base) {
-    string outVal = "";
+std::string decToBase(const std::string& inVal, int base) {
+    std::string outVal = "";
     /*
     IF (isDigits(inVal) && base >= 2 and base <=16) {
         set inVal to integer type
-        outVal = “”
+        outVal = â€œâ€
         decVal = inVal string converted to decimal
         WHILE (decVal > 0)
             tempVal = decValue % base
@@ -84,7 +86,7 @@ string decToBase(const string& inVal, int base) {
     return outVal;
 }
 
-int bintoDec(const string& inVal, int base) {
+int bintoDec(const std::string& inVal, int base) {
     /*
     IF(str1 contains only 1s and 0s)
         outVal = 0
