@@ -149,6 +149,100 @@ int baseToDec(const std::string& inVal, int base) {
         std::cout << "Invalid input " << inVal << std::endl;
         return -1;
     }
+<<<<<<< HEAD
+=======
+}
+
+std::string baseToBase(const std::string& inVal, int base1, int base2) {
+    std::string decVal, result;
+    decVal = std::to_string(baseToDec(inVal, base1));
+    if (decVal != "-1") {
+        result = decToBase(decVal, base2);
+    } else {
+        std::cout << "Unfortunately, I haven't figured out how to do that yet. Check again later. " << std::endl;
+        result = "";
+    }
+    return result;
+
+}
+
+void printMenu() {
+    std::cout << "Please enter what you would like to do:" << std::endl;
+    std::cout << "\tA: Convert a number to decimal (enter a value & given base)" << std::endl;
+    std::cout << "\tB: Convert a decimal to another base (enter a decimal value and a base)" << std::endl;
+    std::cout << "\tC: Convert a number from base1 to base2 (enter number, base1, and base2)" << std::endl;
+    std::cout << "\tQ: QUIT" << std::endl;
+    std::cout << ">>> ";
+}
+
+// Main Loop Function
+void runLoop() {
+    // Handles Menu Functionality and User Input
+    int output, base1, base2;
+    std::string inputString, outputString;
+    char menuChoice;
+    printMenu();
+    std::cin >> menuChoice;
+    while (menuChoice != 'q' && menuChoice != 'Q') {
+        switch (menuChoice) {
+            case 'a':
+            case 'A':
+                // Convert a number to decimal
+                // Get value and base
+                std::cout << "Enter your input value: ";
+                std::cin >> inputString;
+                std::cout << "Enter given base value: ";
+                std::cin >> base1;
+                std::cout << std::endl;
+
+                output = baseToDec(inputString, base1);
+                if (output != -1) { // If the inputString was valid
+                    std::cout << "The value " << inputString << " in base " << base1 << " is " << output << " in decimal." << std::endl;
+                }
+                break;
+            case 'b':
+            case 'B':
+                // Convert a decimal to another base
+                // Get value and base
+                std::cout << "Enter your decimal value: ";
+                std::cin >> inputString;
+                std::cout << "Enter resulting base value: ";
+                std::cin >> base1;
+                std::cout << std::endl;
+
+                outputString = decToBase(inputString, base1);
+                if (outputString != "") { // If the inputString was valid
+                    std::cout << "The decimal value " << inputString << " is " << outputString << " in base " << base1 << std::endl;
+                }
+                break;
+            case 'c':
+            case 'C':
+                // Convert a number from base1 to base2
+                // Get value, base of value (base1), and base to convert to (base2)
+                std::cout << "Enter your input value: ";
+                std::cin >> inputString;
+                std::cout << "Enter original base: ";
+                std::cin >> base1;
+                std::cout << std::endl;
+                std::cout << "Enter output base: ";
+                std::cin >> base2;
+                std::cout << std::endl;
+
+                outputString = baseToBase(inputString, base1, base2);
+                if (outputString != "") { // If the inputString was valid
+                    std::cout << "The value " << inputString << " is " << outputString << " in base " << base2 << std::endl;
+                }
+                break;
+            default:
+                // Invalid menu choice
+                std::cout << "Invalid Choice";
+        }
+        std::cout << std::endl;
+        printMenu();
+        std::cin >> menuChoice;
+    }
+    std::cout << "Goodbye! ";
+>>>>>>> 6a1596a93afec3f6f264624f033edb4aa707e3ed
 }
 
 std::string baseToBase(const std::string& inVal, int base1, int base2) {
