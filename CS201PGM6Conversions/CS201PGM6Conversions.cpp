@@ -27,11 +27,12 @@ Say Goodbye
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <bits/stdc++.h> // To allow use of transform to convert string to uppercase for base > 10
 
 //FUNCTION DECLARATIONS
-bool isDigits(std::string inStr);
+bool isDigits(std::string inStr, int base);
 //PRE:  string is input to the function
-//POST:  return true if nothing other than a digit is found{
+//POST:  return true if nothing other than a digit is found
 
 std::string decToBase(const std::string& inVal, int base);
 //PRE: input string is sent to function
@@ -56,8 +57,15 @@ int main() {
 }
 
 //FUNCTION DEFINITIONS
-bool isDigits(std::string inStr) {
-    return (inStr.find_first_not_of("0123456789") == std::string::npos);
+bool isDigits(std::string inStr, int base) {
+    /*
+    Initialize allowedChars, truncate length based on base (up to base 16)
+    Compare letters in string to ensure that only those in allowedChars are used
+    */
+    std::string allowedChars = "0123456789ABCDEF";                              // Allowed characters up to base 16
+    allowedChars = allowedChars.substr(0,base);                                 // Truncates allowedChars based on base
+    std::transform(inStr.begin(), inStr.end(), inStr.begin(), ::toupper);       // Converting input string to uppercase to test against allowedChars
+    return (inStr.find_first_not_of(allowedChars) == std::string::npos);
 }
 
 std::string decToBase(const std::string& inVal, int base) {
@@ -81,11 +89,11 @@ std::string decToBase(const std::string& inVal, int base) {
     */
     std::string outVal = "";
     int tempVal;
-    if (isDigits(inVal) && base >= 2 && base <= 16) {
-        int decVal = std::stoi(inVal);
-        while (decVal > 0) {
-            tempVal = decVal % base;
-            switch (tempVal) {
+    if (isDigits(inVal, 10) && base >= 2 && base <= 16) { // Ensures inVal is numeric and base is between 2-16 inclusive
+        int decVal = std::stoi(inVal);                    // Convert inVal to integer
+        while (decVal > 0) {                              // Start loop
+            tempVal = decVal % base;                      // Get remainder
+            switch (tempVal) {                            // Adds char to front of outVal string based on tempVal
                 case 15:
                     outVal = 'F' + outVal;
                     break;
@@ -104,7 +112,7 @@ std::string decToBase(const std::string& inVal, int base) {
                 case 10:
                     outVal = 'A' + outVal;
                     break;
-                default:    // Less than 10, add string of value to front of string
+                default:                                 // Less than 10, add string of value to front of string
                     outVal = std::to_string(tempVal) + outVal;
             }
             //std::cout << outVal << std::endl;
@@ -118,32 +126,43 @@ std::string decToBase(const std::string& inVal, int base) {
 }
 
 int baseToDec(const std::string& inVal, int base) {
-    /*IF(str1 is numeric)
-        outVal = 0
-        placeValue = 1
-        tempVal = int(str1)
-        WHILE(tempVal > 0)
-             digit = tempVal % 10
-             outVal = outVal + digit * placeValue
-             placeValue *= base
-             tempVal = tempVal / 10
-        ENDWHILE
-        RETURN outVal
-     ELSE
-        PRINT error
-     ENDIF
-     */
-    if (isDigits(inVal)) { // Ensures inVal is numeric
-        int digit;
+    if (isDigits(inVal, base)) { // Ensures inVal is numeric (including A-F depending on base)
+        char digit;
         int outVal = 0;
         int placeValue = 1;
-        int tempVal = std::stoi(inVal);
-        while (tempVal > 0) {
-            digit = tempVal % 10;
-            outVal += digit * placeValue;
-            placeValue *= base;
-            tempVal = tempVal / 10;
+        for (int i = inVal.size() - 1; i >= 0; i--) { // Counting from the end of the string
+            digit = inVal.at(i);                      // Current digit is character at i
+            switch (digit) {                          // Calculates based on value of digit
+                case 'f':                             // Allows for lowercase or uppercase
+                case 'F':
+                    outVal += 15 * placeValue;
+                    break;
+                case 'e':
+                case 'E':
+                    outVal += 14 * placeValue;
+                    break;
+                case 'd':
+                case 'D':
+                    outVal += 13 * placeValue;
+                    break;
+                case 'c':
+                case 'C':
+                    outVal += 12 * placeValue;
+                    break;
+                case 'b':
+                case 'B':
+                    outVal += 11 * placeValue;
+                    break;
+                case 'a':
+                case 'A':
+                    outVal += 10 * placeValue;
+                    break;
+                default:                                                    // If digit is numeric
+                    outVal += (static_cast<int>(digit) - 48) * placeValue;  // Convert char to int, multiply by placeValue
+            }
+            placeValue *= base; // Incrementally multiply placeValue for each place in inVal
         }
+        
         return outVal;
     } else {
         std::cout << "Invalid input " << inVal << std::endl;
@@ -151,14 +170,17 @@ int baseToDec(const std::string& inVal, int base) {
     }
 }
 
+
 std::string baseToBase(const std::string& inVal, int base1, int base2) {
-    std::string decVal, result;
-    decVal = std::to_string(baseToDec(inVal, base1));
-    if (decVal != "-1") {
-        result = decToBase(decVal, base2);
-    } else {
-        std::cout << "Unfortunately, I haven't figured out how to do that yet. Check again later. " << std::endl;
-        result = "";
+    /*
+    Convert base1 inVal to decimal
+    Convert decimal to base2 result
+    */
+    std::string decVal;
+    std::string result = "";
+    decVal = std::to_string(baseToDec(inVal, base1)); // base1 to decimal
+    if (decVal != "-1"){
+        result = decToBase(decVal, base2);                // decimal to base2
     }
     return result;
 
@@ -221,7 +243,6 @@ void runLoop() {
                 std::cin >> inputString;
                 std::cout << "Enter original base: ";
                 std::cin >> base1;
-                std::cout << std::endl;
                 std::cout << "Enter output base: ";
                 std::cin >> base2;
                 std::cout << std::endl;
